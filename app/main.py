@@ -1,9 +1,21 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from sqlalchemy import text
+from app.db.session import engine
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    with engine.connect() as connection:
+        connection.execute(text("SELECT 1"))
+        print("数据库连接成功")
+    yield
+    engine.dispose()
+    print("数据库连接已关闭")
 #FastAPI 类
 app = FastAPI(
     title = "预约系统 API",
     description = "基于 FastAPI 开发的预约系统",
     version = "0.1.0",
+    lifespan = lifespan
 )
 #装饰器 
 #在声明类时，会将类的get方法注册为路由，路由的路径为"/",当读取"/"路径时，
