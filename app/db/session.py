@@ -1,5 +1,6 @@
+from collections.abc import Generator
 from sqlalchemy import URL, create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, sessionmaker, Session
 from app.core.config import settings
 database_url = URL.create(
     drivername="mysql+pymysql",
@@ -22,3 +23,9 @@ SessionLocal = sessionmaker(
 )
 class Base(DeclarativeBase):
     pass
+def get_db() -> Generator[Session, None, None]:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
