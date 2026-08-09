@@ -3,9 +3,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy import DateTime, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.session import Base
+
 if TYPE_CHECKING:
     from app.models.resource import Resource
     from app.models.user import User
+
 class Reservation(Base):
     __tablename__ = "reservations"
     id: Mapped[int] = mapped_column(
